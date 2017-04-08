@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="icon" href="./favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="shortcut icon" href="./favicon.ico" type="image/vnd.microsoft.icon">
+<link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-precomposed.png">
+<title>Your Age</title>
+<style>
+html{font-size:20px;}
+h1,p,div{text-align:center;}
+select{font-size:2rem;box-sizing:border-box;}
+span{font-size:2rem;}
+</style>
+</head>
+<body>
+<h1>Your Age</h1>
+<p>生年月日を入れると今の年齢がわかります。</p>
+<p><select id="y"></select><select id="m"></select><select id="d"></select></p>
+<div><span id="a">0</span><span>歳</span></div>
+<script>
+var birthday = new Date();
+
+function CalcAge( k, v )
+{
+    birthday = new Date(
+        k === 'y' ? v : birthday.getFullYear(),
+        k === 'm' ? v : birthday.getMonth(),
+        k === 'd' ? v : birthday.getDate(),
+    );
+    var d = new Date();
+    var a = d.getFullYear() - birthday.getFullYear();
+    if ( d.getMonth() < birthday.getMonth() || ( d.getMonth() == birthday.getMonth() && d.getDate() < birthday.getDate() ) ) { --a; }
+    document.getElementById( 'a' ).innerHTML = a;
+}
+
+function CreateOption( value, selected )
+{
+    var o = document.createElement( 'option' );
+    o.setAttribute( 'value', value );
+    o.selected = selected;
+    o.innerHTML = value;
+    return o;
+}
+
+function InitSelect( id, min, max, now )
+{
+    var s = document.getElementById( id );
+    for( ; min <= max ; ++min )
+    {
+        s.appendChild( CreateOption( min, min === now ) );
+    }
+    s.onchange = function()
+    {
+        CalcAge( id, parseInt( this.options[ this.selectedIndex ].value ) );
+    }
+}
+
+InitSelect( 'y', 1900, 2017, birthday.getFullYear() );
+InitSelect( 'm', 1, 12, birthday.getMonth() + 1 );
+InitSelect( 'd', 1, 31, birthday.getDate() );
+
+</script>
+</body>
+</html>
